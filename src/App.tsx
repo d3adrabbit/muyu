@@ -1,17 +1,36 @@
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useLayoutEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment, OrbitControls, Stage } from '@react-three/drei';
+import gsap from 'gsap';
+import { OrbitControls, Stage } from '@react-three/drei';
 import { Model } from './Model';
 
 function App() {
-  const ref = useRef<any>();
+  const controlRef = useRef<any>(null);
+  const plusRef = useRef<HTMLDivElement>(null);
+
+  const handleClick = () => {
+    gsap.from(plusRef.current, {
+      y: 20,
+    });
+
+    console.log(12);
+  };
+
+  // useLayoutEffect(() => {
+
+  //   gsap
+
+  // }, []);
+
   return (
     <div className="App" id="canvas">
-      {/* <div className="flex justify-center">
-        <div className="text-sm">因果循環</div>
-      </div> */}
+      <div
+        ref={plusRef}
+        className="absolute left-1/2 top-1/4 text-2xl font-bold"
+      >
+        + 1
+      </div>
       <Canvas
-        camera={{ position: [0, 40, 5] }}
         style={{
           position: 'fixed',
           top: 0,
@@ -20,13 +39,16 @@ function App() {
         }}
       >
         <Suspense fallback={null}>
-          <Model />
+          <Stage controls={controlRef} intensity={0.8}>
+            <Model onClick={handleClick} />
+          </Stage>
         </Suspense>
-        {/* <OrbitControls
-          ref={ref}
+
+        <OrbitControls
+          ref={controlRef}
           minPolarAngle={Math.PI / 2}
           maxPolarAngle={Math.PI / 2}
-        /> */}
+        />
       </Canvas>
     </div>
   );
